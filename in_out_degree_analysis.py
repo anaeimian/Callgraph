@@ -152,6 +152,11 @@ propagation_time_index = 0
 propagation_time_total = 0
 propagation_time_array = []
 
+in_degree_avg_array = []
+out_degree_avg_array = []
+buggy_in_degree_avg_array = []
+buggy_out_degree_avg_array = []
+
 with open('vertex_bug_changes_date_map.txt') as vertex_bug_changes_file:
     vertex_bug_changes_map = eval(vertex_bug_changes_file.read())
 
@@ -229,10 +234,17 @@ for commit in content:
     added_calls, removed_calls = subtract_two_maps(calls_map, last_calls_map)
 
     text = ""
+    in_degree_array = []
+    out_degree_array = []
+    buggy_in_degree_array = []
+    buggy_out_degree_array = []
     for caller, callees in calls_map.items():
-
+        in_degree_array.append(len(get_callers(caller, calls_map)))
+        out_degree_array.append(len(callees))
         for item in callees:
             if vertex_bug_changes_map[caller] and vertex_bug_changes_map[item]:
+                buggy_in_degree_array.append(len(get_callers(caller, calls_map)))
+                buggy_out_degree_array.append(len(callees))
                 date_array_source = vertex_bug_changes_map[caller]
                 date_array_dst = vertex_bug_changes_map[item]
                 date_diff = source_dst_date_diff(date_array_dst, date_array_source)
@@ -242,6 +254,11 @@ for commit in content:
                         propagation_time_index += 1
                         propagation_time_total += date_diff
                         propagation_time_array.append(date_diff)
+    in_degree_avg_array.append(statistics.mean(in_degree_array))
+    out_degree_avg_array.append(statistics.mean(out_degree_array))
+
+    buggy_in_degree_avg_array.append(statistics.mean(buggy_in_degree_array))
+    buggy_out_degree_avg_array.append(statistics.mean(buggy_out_degree_array))
 
     last_calls_map = calls_map
     print(bug_number, 'bug')
@@ -249,13 +266,7 @@ for commit in content:
     print(commit)
     index += 1
 
-with open('vertex_bug_propagation_map.txt', 'w') as vertex_bug_propagation_file:
-    vertex_bug_propagation_file.write(str(vertex_bug_propagation_time_map))
-# print(propagation_time_index, propagation_time_total, propagation_time_total/propagation_time_index)
-print('median: ', statistics.median(propagation_time_array))
-print('mode: ', statistics.mode(propagation_time_array))
-print('mean: ', statistics.mean(propagation_time_array))
-print('max: ', max(propagation_time_array))
-print('min: ', min(propagation_time_array))
-print('length: ', len(propagation_time_array))
-print('array:', propagation_time_array)
+print("in degree average: ", statistics.mean(in_degree_avg_array))
+print("out degree average: ", statistics.mean(out_degree_avg_array))
+print("buggy in degree average: ", statistics.mean(buggy_in_degree_avg_array))
+print("buggy out degree average: ", statistics.mean(buggy_out_degree_avg_array))
