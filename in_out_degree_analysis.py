@@ -176,7 +176,9 @@ for commit in content:
     if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
         print("continue")
         continue
-
+    # if index < 2500:
+    #     index+=1
+    #     continue
     path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\" + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
@@ -272,11 +274,15 @@ for commit in content:
                         propagation_time_array.append(date_diff)
                         bug_propagated_in_degree_array.append(len(get_callers(caller, calls_map)))
                         bug_propagated_out_degree_array.append(len(callee_list))
-    in_degree_avg_array.append(statistics.mean(in_degree_array))
-    out_degree_avg_array.append(statistics.mean(out_degree_array))
+    if in_degree_array:
+        in_degree_avg_array.append(statistics.mean(in_degree_array))
+    if out_degree_array:
+        out_degree_avg_array.append(statistics.mean(out_degree_array))
 
-    buggy_in_degree_avg_array.append(statistics.mean(buggy_in_degree_array))
-    buggy_out_degree_avg_array.append(statistics.mean(buggy_out_degree_array))
+    if buggy_in_degree_array:
+        buggy_in_degree_avg_array.append(statistics.mean(buggy_in_degree_array))
+    if buggy_out_degree_array:
+        buggy_out_degree_avg_array.append(statistics.mean(buggy_out_degree_array))
 
     if bug_propagated_in_degree_array:
         bug_propagated_in_degree_avg_array.append(statistics.mean(bug_propagated_in_degree_array))
@@ -289,6 +295,7 @@ for commit in content:
     print(commit)
     index += 1
 
+
 print("in degree average: ", statistics.mean(in_degree_avg_array))
 print("out degree average: ", statistics.mean(out_degree_avg_array))
 
@@ -297,3 +304,16 @@ print("buggy out degree average: ", statistics.mean(buggy_out_degree_avg_array))
 
 print("bug propagated in degree average: ", statistics.mean(bug_propagated_in_degree_avg_array))
 print("bug propagated out degree average: ", statistics.mean(bug_propagated_out_degree_avg_array))
+
+with open('in_degree_avg_array.txt', 'w') as in_degree_avg_array_file:
+    in_degree_avg_array_file.write(str(in_degree_avg_array))
+with open('out_degree_avg_array.txt', 'w') as out_degree_avg_array_file:
+    out_degree_avg_array_file.write(str(out_degree_avg_array))
+with open('buggy_in_degree_avg_array.txt', 'w') as buggy_in_degree_avg_array_file:
+    buggy_in_degree_avg_array_file.write(str(buggy_in_degree_avg_array))
+with open('buggy_out_degree_avg_array.txt', 'w') as buggy_out_degree_avg_array_file:
+    buggy_out_degree_avg_array_file.write(str(buggy_out_degree_avg_array))
+with open('bug_propagated_in_degree_avg_array.txt', 'w') as bug_propagated_in_degree_avg_array_file:
+    bug_propagated_in_degree_avg_array_file.write(str(bug_propagated_in_degree_avg_array))
+with open('bug_propagated_out_degree_avg_array.txt', 'w') as bug_propagated_out_degree_avg_array_file:
+    bug_propagated_out_degree_avg_array_file.write(str(bug_propagated_out_degree_avg_array))

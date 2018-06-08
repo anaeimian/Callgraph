@@ -47,10 +47,10 @@ def get_callers(node, call_graph):
     return callers
 
 
-def get_callee_number(calls_map):
+def get_callee_number(callsmap):
     counter = 0
-    for key, value in calls_map.items():
-        counter += len(value)
+    for key1, value1 in callsmap.items():
+        counter += len(value1)
     return counter
 
 
@@ -151,6 +151,7 @@ prev_functions_diff_removed = 0
 propagation_time_index = 0
 propagation_time_total = 0
 propagation_time_array = []
+src_dst_array = []
 
 with open('vertex_bug_changes_date_map.txt') as vertex_bug_changes_file:
     vertex_bug_changes_map = eval(vertex_bug_changes_file.read())
@@ -229,19 +230,21 @@ for commit in content:
     added_calls, removed_calls = subtract_two_maps(calls_map, last_calls_map)
 
     text = ""
+
     for caller, callees in calls_map.items():
 
         for item in callees:
             if vertex_bug_changes_map[caller] and vertex_bug_changes_map[item]:
                 date_array_source = vertex_bug_changes_map[caller]
                 date_array_dst = vertex_bug_changes_map[item]
-                date_diff = source_dst_date_diff(date_array_dst, date_array_source)
+                date_diff = source_dst_date_diff(date_array_source, date_array_dst)
                 if date_diff:
                     if not src_dst_exists(caller, item, vertex_bug_propagation_time_map):
                         insert_time_map(caller, item, date_diff, vertex_bug_propagation_time_map)
                         propagation_time_index += 1
                         propagation_time_total += date_diff
                         propagation_time_array.append(date_diff)
+                        src_dst_array.append((caller, item))
 
     last_calls_map = calls_map
     print(bug_number, 'bug')
@@ -252,7 +255,7 @@ for commit in content:
         print(calls_map)
     index += 1
 
-with open('vertex_bug_propagation_map.txt', 'w') as vertex_bug_propagation_file:
+with open('vertex_bug_propagation_map_psd.txt', 'w') as vertex_bug_propagation_file:
     vertex_bug_propagation_file.write(str(vertex_bug_propagation_time_map))
 # print(propagation_time_index, propagation_time_total, propagation_time_total/propagation_time_index)
 print('median: ', statistics.median(propagation_time_array))
@@ -262,3 +265,4 @@ print('max: ', max(propagation_time_array))
 print('min: ', min(propagation_time_array))
 print('length: ', len(propagation_time_array))
 print('array:', propagation_time_array)
+print('src dst array', src_dst_array)

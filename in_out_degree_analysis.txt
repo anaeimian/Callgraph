@@ -1,0 +1,6 @@
+in degree average:  0.6416773430379814
+out degree average:  0.6527221955838106
+buggy in degree average:  2.4924056416362763
+buggy out degree average:  1.6303836415774484
+bug propagated in degree average:  0.24259259259259258
+bug propagated out degree average:  4.7085185185185185
