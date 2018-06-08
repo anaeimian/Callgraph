@@ -47,6 +47,14 @@ def get_callers(node, call_graph):
     return callers
 
 
+def get_callees(node1, call_graph1):
+    callees_array = []
+    for caller_item, callees_list in call_graph1.items():
+        if node1 == caller_item:
+            callees_array.append(callees_list)
+    return callees_array
+
+
 def get_callee_number(calls_map):
     counter = 0
     for key, value in calls_map.items():
@@ -54,10 +62,11 @@ def get_callee_number(calls_map):
     return counter
 
 
-def get_callee_mapping(callee_array, functions_map):
+def get_callee_mapping(callee_array, func_map):
+    # print("get callee mapping")
     array = []
     for item in callee_array:
-        array.append(functions_map[item])
+        array.append(func_map[item])
     return array
 
 
@@ -156,6 +165,8 @@ in_degree_avg_array = []
 out_degree_avg_array = []
 buggy_in_degree_avg_array = []
 buggy_out_degree_avg_array = []
+bug_propagated_in_degree_avg_array = []
+bug_propagated_out_degree_avg_array = []
 
 with open('vertex_bug_changes_date_map.txt') as vertex_bug_changes_file:
     vertex_bug_changes_map = eval(vertex_bug_changes_file.read())
@@ -216,8 +227,8 @@ for commit in content:
 
     added_functions = set(current_functions_array) - set(last_functions)
     removed_functions = set(last_functions) - set(current_functions_array)
-    print(added_functions, 'added functions')
-    print(removed_functions, 'removed functions')
+    # print(added_functions, 'added functions')
+    # print(removed_functions, 'removed functions')
     last_functions = current_functions_array
 
     for class_item in classes:
@@ -226,25 +237,30 @@ for commit in content:
             try:
                 callee_mapping = get_callee_mapping(
                     function_item['calls'], main_functions_map)
+
                 calls_map[main_functions_map[
                     class_item['class_name'] + '.' + function_item['function_name']]] = callee_mapping
 
             except Exception as e:
                 bug_number += 1
     added_calls, removed_calls = subtract_two_maps(calls_map, last_calls_map)
-
     text = ""
     in_degree_array = []
     out_degree_array = []
     buggy_in_degree_array = []
     buggy_out_degree_array = []
-    for caller, callees in calls_map.items():
+    bug_propagated_in_degree_array = []
+    bug_propagated_out_degree_array = []
+    for caller, callee_list in calls_map.items():
         in_degree_array.append(len(get_callers(caller, calls_map)))
-        out_degree_array.append(len(callees))
-        for item in callees:
+        out_degree_array.append(len(callee_list))
+        if vertex_bug_changes_map[caller]:
+            buggy_in_degree_array.append(len(get_callers(caller, calls_map)))
+            buggy_out_degree_array.append(len(callee_list))
+        for item in callee_list:
             if vertex_bug_changes_map[caller] and vertex_bug_changes_map[item]:
-                buggy_in_degree_array.append(len(get_callers(caller, calls_map)))
-                buggy_out_degree_array.append(len(callees))
+                buggy_in_degree_array.append(len(get_callers(item, calls_map)))
+                buggy_out_degree_array.append(len(get_callees(item, calls_map)))
                 date_array_source = vertex_bug_changes_map[caller]
                 date_array_dst = vertex_bug_changes_map[item]
                 date_diff = source_dst_date_diff(date_array_dst, date_array_source)
@@ -254,11 +270,18 @@ for commit in content:
                         propagation_time_index += 1
                         propagation_time_total += date_diff
                         propagation_time_array.append(date_diff)
+                        bug_propagated_in_degree_array.append(len(get_callers(caller, calls_map)))
+                        bug_propagated_out_degree_array.append(len(callee_list))
     in_degree_avg_array.append(statistics.mean(in_degree_array))
     out_degree_avg_array.append(statistics.mean(out_degree_array))
 
     buggy_in_degree_avg_array.append(statistics.mean(buggy_in_degree_array))
     buggy_out_degree_avg_array.append(statistics.mean(buggy_out_degree_array))
+
+    if bug_propagated_in_degree_array:
+        bug_propagated_in_degree_avg_array.append(statistics.mean(bug_propagated_in_degree_array))
+    if bug_propagated_out_degree_array:
+        bug_propagated_out_degree_avg_array.append(statistics.mean(bug_propagated_out_degree_array))
 
     last_calls_map = calls_map
     print(bug_number, 'bug')
@@ -268,5 +291,9 @@ for commit in content:
 
 print("in degree average: ", statistics.mean(in_degree_avg_array))
 print("out degree average: ", statistics.mean(out_degree_avg_array))
+
 print("buggy in degree average: ", statistics.mean(buggy_in_degree_avg_array))
 print("buggy out degree average: ", statistics.mean(buggy_out_degree_avg_array))
+
+print("bug propagated in degree average: ", statistics.mean(bug_propagated_in_degree_avg_array))
+print("bug propagated out degree average: ", statistics.mean(bug_propagated_out_degree_avg_array))

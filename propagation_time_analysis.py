@@ -54,10 +54,10 @@ def get_callee_number(calls_map):
     return counter
 
 
-def get_callee_mapping(callee_array, functions_map):
+def get_callee_mapping(callee_array, func_map):
     array = []
     for item in callee_array:
-        array.append(functions_map[item])
+        array.append(func_map[item])
     return array
 
 
@@ -247,6 +247,9 @@ for commit in content:
     print(bug_number, 'bug')
 
     print(commit)
+
+    if index == 0:
+        print(calls_map)
     index += 1
 
 with open('vertex_bug_propagation_map.txt', 'w') as vertex_bug_propagation_file:
