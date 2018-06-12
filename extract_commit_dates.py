@@ -10,6 +10,10 @@ commits = list(repository.iter_commits(
 text = ""
 commits.reverse()
 for commit in commits:
+    if commit.hexsha == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
+        print(commit.committed_date)
+    else:
+        continue
     if time.gmtime(commit.committed_date).tm_mon < 10:
         month = '0' + str(time.gmtime(commit.committed_date).tm_mon)
     else:
