@@ -21,7 +21,7 @@ def add_remove_diff(dates_array, changes):
 
                 if len(dates_array) > 3:
                     for index in range(math.floor(float(len(dates_array)) / 2) - 1):
-                        removes.append(date_diff_days(dates_array[2*index + 1], dates_array[2*index + 3]))
+                        removes.append(date_diff_days(dates_array[2 * index + 1], dates_array[2 * index + 3]))
     return adds, removes, adds_removes, adds_removes2
 
 
@@ -41,7 +41,14 @@ def date_diff_days(date1, date2):
 
 
 def reformat_dates(date_array):
-    return ""
+    array = []
+    for item in date_array:
+        item = int(item)
+        year = time.gmtime(item).tm_year
+        month = time.gmtime(item).tm_mon
+        day = time.gmtime(item).tm_mday
+        array.append(str(year) + "-" + str(month) + "-" + str(day))
+    return array
 
 
 with open('edge_life_cycle_map.txt') as edge_life_cycle_map_file:
@@ -57,7 +64,7 @@ for key, value in edge_life_cycle_map.items():
     removes_array += removes
     adds_removes_array += adds_removes
     adds_removes_array2 += adds_removes2
-    print('dates: ', value['dates'])
+    print('dates: ', reformat_dates(value['dates']))
     print('adds: ', adds)
     print('removes: ', removes)
     print('adds_removes: ', adds_removes)
