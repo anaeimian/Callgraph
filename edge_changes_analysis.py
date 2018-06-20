@@ -3,6 +3,7 @@ from datetime import date
 import math
 import statistics
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def add_remove_diff(dates_array, changes):
@@ -63,7 +64,7 @@ for key, value in edge_life_cycle_map.items():
             print('add-remove-add - ', key, adds_removes, removes_adds, reformat_dates(value['dates']),
                   value['commits'])
             add_remove_add_array.append(key)
-    for number in range(len(adds_removes)-1):
+    for number in range(len(adds_removes) - 1):
         if removes_adds[number] == 0 and adds_removes[number + 1] == 0:
             print('remove-add-remove - ', key, adds_removes, removes_adds, reformat_dates(value['dates']),
                   value['commits'])
@@ -96,3 +97,7 @@ print('adds-removes array:', sorted(adds_removes_array), len(adds_removes_array)
 print('adds-removes array length:', len(adds_removes_array))
 print('removes-adds array:', sorted(removes_adds_array), len(removes_adds_array))
 print('removes-adds array length:', len(removes_adds_array))
+arrays = [adds_removes_array, removes_adds_array]
+plt.boxplot(arrays, showmeans=True)
+plt.xticks([1, 2], ['Add-Remove', 'Remove-Add'])
+plt.show()
