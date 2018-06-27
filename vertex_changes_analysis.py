@@ -52,7 +52,12 @@ adds_removes_array = []
 index = 0
 add_remove_add_array = []
 vertex_changes_map_add_remove = {}
+vertex_changes_map_add_remove_callers = {}
+vertex_changes_map_add_remove_length = {}
+
 vertex_changes_map_remove_add = {}
+vertex_changes_map_remove_add_callers = {}
+vertex_changes_map_remove_add_length = {}
 remove_add_remove_array = []
 for key, value in edge_life_cycle_map.items():
     adds_removes, removes_adds = add_remove_diff(value['dates'], value['changes'])
@@ -65,6 +70,13 @@ for key, value in edge_life_cycle_map.items():
             vertex += 1
             vertex_changes_map_add_remove[key[1]] = vertex
 
+            try:
+                callers = vertex_changes_map_add_remove_callers[key[1]]
+            except:
+                callers = []
+            callers.append(key[0])
+            vertex_changes_map_add_remove_callers[key[1]] = callers
+
     for item in removes_adds:
         if item < 2:
             try:
@@ -74,5 +86,39 @@ for key, value in edge_life_cycle_map.items():
             vertex += 1
             vertex_changes_map_remove_add[key[1]] = vertex
 
+            try:
+                callers = vertex_changes_map_remove_add_callers[key[1]]
+            except:
+                callers = []
+            callers.append(key[0])
+            vertex_changes_map_remove_add_callers[key[1]] = callers
+
+
+for key, value in vertex_changes_map_add_remove_callers.items():
+    vertex_changes_map_add_remove_callers[key] = list(set(value))
+    vertex_changes_map_add_remove_length[key] = len(list(set(value)))
+
+for key, value in vertex_changes_map_remove_add_callers.items():
+    vertex_changes_map_remove_add_callers[key] = list(set(value))
+    vertex_changes_map_remove_add_length[key] = len(list(set(value)))
+
+for key, value in vertex_changes_map_add_remove_length.items():
+    adds_removes_array.append(value)
+
+for key, value in vertex_changes_map_remove_add_length.items():
+    removes_adds_array.append(value)
+
 print(vertex_changes_map_add_remove)
 print(vertex_changes_map_remove_add)
+print()
+print(vertex_changes_map_add_remove_callers)
+# print(vertex_changes_map_add_remove_length)
+print()
+print(vertex_changes_map_remove_add_callers)
+# print(vertex_changes_map_remove_add_length)
+print()
+
+# print(sorted(vertex_changes_map_add_remove_length,key = vertex_changes_map_add_remove_length.get))
+print(sorted(adds_removes_array))
+# print(sorted(vertex_changes_map_remove_add_length,key = vertex_changes_map_remove_add_length.get))
+print(sorted(removes_adds_array))
