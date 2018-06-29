@@ -1,28 +1,38 @@
-with open('final_call_graph.txt', 'r') as inf:
-    call_graph = eval(inf.read())
-with open('vertex_bug_changes_date_map.txt', 'r') as vertex_bug_changes:
-    vertex_changes = eval(vertex_bug_changes.read())
-index = 0
-for key, value in call_graph.items():
-    flag = False
-    for item in value:
-        if vertex_changes[item]:
-            flag = True
-            break
-    if vertex_changes[key] and flag:
-        source_change_dates = vertex_changes[key]
-        for item in value:
-            found = False
-            destination_change_dates = vertex_changes[item]
-            for source_date in source_change_dates:
-                for destination_date in destination_change_dates:
-                    if source_date < destination_date:
-                        print(key , item)
-                        print(source_date, destination_date)
-                        found = True
-                        break
-                if found:
-                    break
+# This script uses vertex_bug_changes_date_map and edge_life_cycle_map and
+# determines neighbor vertices which are buggy and determines the direction of bug propagation
+import math
 
-        print("/////////////////////")
-print(index)
+
+def edge_exists_in_graph(edge_info, src_date, dst_date):
+    dates = edge_info['dates']
+    changes = edge_info['changes']
+    if changes[0] == "add":
+        for index in range(math.floor(len(dates)/2)):
+            if int(dates[2 * index]) <= src_date <= int(dates[2 * index + 1]) and int(dates[2 * index]) <= dst_date <= int(dates[
+                    2 * index + 1]):
+                return True
+        if len(dates) % 2 == 1:
+            if src_date >= int(dates[len(dates)-1]) and dst_date >= int(dates[len(dates)-1]):
+                return True
+    return False
+
+
+i = 0
+with open('edge_life_cycle_map.txt', 'r') as edge_life_cycle_map_file:
+    edge_life_cycle_map = eval(edge_life_cycle_map_file.read())
+with open('vertex_bug_changes_date_map.txt', 'r') as vertex_bug_changes_file:
+    vertex_bug_changes = eval(vertex_bug_changes_file.read())
+for edge, info in edge_life_cycle_map.items():
+    src_vertex = edge[0]
+    dst_vertex = edge[1]
+    edge_dates = info['dates']
+    src_date_array = vertex_bug_changes[src_vertex]
+    dst_date_array = vertex_bug_changes[dst_vertex]
+    if len(src_date_array) > 0 and len(dst_date_array) > 0:
+        src_date_min = src_date_array[0]
+        dst_date_min = dst_date_array[0]
+        if edge_exists_in_graph(info, int(src_date_min), int(dst_date_min)):
+            if src_date_min < dst_date_min:
+                i += 1
+
+print(i)

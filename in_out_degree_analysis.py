@@ -135,8 +135,8 @@ def extract_maps(classes):
 
 vertex_changes_map = {}
 vertex_bug_propagation_time_map = {}
-
-path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
+basic_path = "C:\\Users\\anaeimia\Documents\Thesis\Spark\\"
+path = basic_path + "himrod docs\spark\\d107b3b910d8f434fb15b663a9db4c2dfe0a9f43\\"
 classes = open(path + 'classes.txt').read()
 classes = json.loads(classes)
 main_classes_map, main_functions_map, main_calls_map, class_index, function_index = extract_maps(classes)
@@ -149,7 +149,7 @@ for key, value in main_functions_map.items():
     vertex_bug_propagation_time_map[value] = []
 
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\commits_list_new.txt') as commits_file:
+with open(basic_path + 'commits_list_new.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0
@@ -173,13 +173,13 @@ with open('vertex_bug_changes_date_map.txt') as vertex_bug_changes_file:
 
 for commit in content:
     print(index, 'index\n')
-    if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
+    if commit.strip() == "d107b3b910d8f434fb15b663a9db4c2dfe0a9f43":
         print("continue")
         continue
     # if index < 2500:
     #     index+=1
     #     continue
-    path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\" + commit.strip() + "\\"
+    path = basic_path + "himrod docs\spark\\" + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
     except:
@@ -305,7 +305,7 @@ print("buggy out degree average: ", statistics.mean(buggy_out_degree_avg_array))
 print("bug propagated in degree average: ", statistics.mean(bug_propagated_in_degree_avg_array))
 print("bug propagated out degree average: ", statistics.mean(bug_propagated_out_degree_avg_array))
 
-with open('in_degree_avg_array.txt', 'w') as in_degree_avg_array_file:
+with open(basic_path + 'Analysis Results\in_degree_avg_array.txt', 'w') as in_degree_avg_array_file:
     in_degree_avg_array_file.write(str(in_degree_avg_array))
 with open('out_degree_avg_array.txt', 'w') as out_degree_avg_array_file:
     out_degree_avg_array_file.write(str(out_degree_avg_array))
