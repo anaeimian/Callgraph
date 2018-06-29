@@ -37,6 +37,6 @@ for edge, info in edge_life_cycle_map.items():
             if src_date_min < dst_date_min:
                 print(edge)
                 i += 1
-        print(src_commit.strip(), dst_commit.strip())
+                print(src_commit.strip(), dst_commit.strip())
 
 print(i)
