@@ -4,6 +4,7 @@ import math
 import statistics
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
 
 
 def add_remove_diff(dates_array, changes):
@@ -44,6 +45,13 @@ def reformat_dates(date_array):
     return array
 
 
+def write_map_to_excel(map_var, file_name):
+    csv_file = open(file_name, 'w')
+    for key2, value2 in map_var.items():
+        csv_file.write(str(key2) + ', ' + str(value2) + '\n')
+    csv_file.close()
+
+
 with open('edge_life_cycle_map.txt') as edge_life_cycle_map_file:
     edge_life_cycle_map = eval(edge_life_cycle_map_file.read())
 
@@ -51,72 +59,179 @@ removes_adds_array = []
 adds_removes_array = []
 index = 0
 add_remove_add_array = []
-vertex_changes_map_add_remove = {}
-vertex_changes_map_add_remove_callers = {}
-vertex_changes_map_add_remove_length = {}
+vertex_changes_map_add_remove_01 = {}
+vertex_changes_map_add_remove_total = {}
+vertex_changes_map_add_remove_callers_01 = {}
+vertex_changes_map_add_remove_callers_total = {}
+vertex_changes_map_add_remove_length_01 = {}
+vertex_changes_map_add_remove_length_total = {}
 
-vertex_changes_map_remove_add = {}
-vertex_changes_map_remove_add_callers = {}
-vertex_changes_map_remove_add_length = {}
+vertex_changes_map_remove_add_01 = {}
+vertex_changes_map_remove_add_total = {}
+vertex_changes_map_remove_add_callers_01 = {}
+vertex_changes_map_remove_add_callers_total = {}
+vertex_changes_map_remove_add_length_01 = {}
+vertex_changes_map_remove_add_length_total = {}
+
+vertex_changes_map_add_remove_sum_01 = {}
+vertex_changes_map_remove_add_sum_01 = {}
+vertex_changes_map_add_remove_sum_total = {}
+vertex_changes_map_remove_add_sum_total = {}
+
 remove_add_remove_array = []
 for key, value in edge_life_cycle_map.items():
     adds_removes, removes_adds = add_remove_diff(value['dates'], value['changes'])
     for item in adds_removes:
         if item < 2:
             try:
-                vertex = vertex_changes_map_add_remove[key[1]]
+                vertex = vertex_changes_map_add_remove_01[key[1]]
             except:
                 vertex = 0
             vertex += 1
-            vertex_changes_map_add_remove[key[1]] = vertex
+            vertex_changes_map_add_remove_01[key[1]] = vertex
 
             try:
-                callers = vertex_changes_map_add_remove_callers[key[1]]
+                callers = vertex_changes_map_add_remove_callers_01[key[1]]
             except:
                 callers = []
             callers.append(key[0])
-            vertex_changes_map_add_remove_callers[key[1]] = callers
+            vertex_changes_map_add_remove_callers_01[key[1]] = callers
+        else:
+            try:
+                vertex = vertex_changes_map_add_remove_01[key[1]]
+            except:
+                vertex = 0
+            vertex_changes_map_add_remove_01[key[1]] = vertex
 
+            try:
+                callers = vertex_changes_map_add_remove_callers_01[key[1]]
+            except:
+                callers = []
+            vertex_changes_map_add_remove_callers_01[key[1]] = callers
+
+
+
+
+        try:
+            vertex = vertex_changes_map_add_remove_total[key[1]]
+        except:
+            vertex = 0
+        vertex += 1
+        vertex_changes_map_add_remove_total[key[1]] = vertex
+
+        try:
+            callers = vertex_changes_map_add_remove_callers_total[key[1]]
+        except:
+            callers = []
+        callers.append(key[0])
+        vertex_changes_map_add_remove_callers_total[key[1]] = callers
     for item in removes_adds:
         if item < 2:
             try:
-                vertex = vertex_changes_map_remove_add[key[1]]
+                vertex = vertex_changes_map_remove_add_01[key[1]]
             except:
                 vertex = 0
             vertex += 1
-            vertex_changes_map_remove_add[key[1]] = vertex
+            vertex_changes_map_remove_add_01[key[1]] = vertex
 
             try:
-                callers = vertex_changes_map_remove_add_callers[key[1]]
+                callers = vertex_changes_map_remove_add_callers_01[key[1]]
             except:
                 callers = []
             callers.append(key[0])
-            vertex_changes_map_remove_add_callers[key[1]] = callers
+            vertex_changes_map_remove_add_callers_01[key[1]] = callers
+        else:
+            try:
+                vertex = vertex_changes_map_remove_add_01[key[1]]
+            except:
+                vertex = 0
+            vertex_changes_map_remove_add_01[key[1]] = vertex
+
+            try:
+                callers = vertex_changes_map_remove_add_callers_01[key[1]]
+            except:
+                callers = []
+            vertex_changes_map_remove_add_callers_01[key[1]] = callers
 
 
-for key, value in vertex_changes_map_add_remove_callers.items():
-    vertex_changes_map_add_remove_callers[key] = list(set(value))
-    vertex_changes_map_add_remove_length[key] = len(list(set(value)))
 
-for key, value in vertex_changes_map_remove_add_callers.items():
-    vertex_changes_map_remove_add_callers[key] = list(set(value))
-    vertex_changes_map_remove_add_length[key] = len(list(set(value)))
 
-for key, value in vertex_changes_map_add_remove_length.items():
-    adds_removes_array.append(value)
+        try:
+            vertex = vertex_changes_map_remove_add_total[key[1]]
+        except:
+            vertex = 0
+        vertex += 1
+        vertex_changes_map_remove_add_total[key[1]] = vertex
 
-for key, value in vertex_changes_map_remove_add_length.items():
-    removes_adds_array.append(value)
+        try:
+            callers = vertex_changes_map_remove_add_callers_total[key[1]]
+        except:
+            callers = []
+        callers.append(key[0])
+        vertex_changes_map_remove_add_callers_total[key[1]] = callers
 
-print(vertex_changes_map_add_remove)
-print(vertex_changes_map_remove_add)
-print()
-print(vertex_changes_map_add_remove_callers)
+for key, value in vertex_changes_map_add_remove_callers_01.items():
+    vertex_changes_map_add_remove_callers_01[key] = list(set(value))
+    vertex_changes_map_add_remove_length_01[key] = len(list(set(value)))
+
+for key, value in vertex_changes_map_remove_add_callers_01.items():
+    vertex_changes_map_remove_add_callers_01[key] = list(set(value))
+    vertex_changes_map_remove_add_length_01[key] = len(list(set(value)))
+
+for key, value in vertex_changes_map_add_remove_01.items():
+    vertex_changes_map_add_remove_sum_01[key] = value + vertex_changes_map_add_remove_length_01[key]
+
+for key, value in vertex_changes_map_remove_add_01.items():
+    vertex_changes_map_remove_add_sum_01[key] = value + vertex_changes_map_remove_add_length_01[key]
+
+for key, value in vertex_changes_map_add_remove_callers_total.items():
+    vertex_changes_map_add_remove_callers_total[key] = list(set(value))
+    vertex_changes_map_add_remove_length_total[key] = len(list(set(value)))
+
+for key, value in vertex_changes_map_remove_add_callers_total.items():
+    vertex_changes_map_remove_add_callers_total[key] = list(set(value))
+    vertex_changes_map_remove_add_length_total[key] = len(list(set(value)))
+
+for key, value in vertex_changes_map_add_remove_total.items():
+    vertex_changes_map_add_remove_sum_total[key] = value + vertex_changes_map_add_remove_length_total[key]
+
+for key, value in vertex_changes_map_remove_add_total.items():
+    vertex_changes_map_remove_add_sum_total[key] = value + vertex_changes_map_remove_add_length_total[key]
+
+# for key, value in vertex_changes_map_add_remove_length.items():
+#     adds_removes_array.append(value)
+#
+# for key, value in vertex_changes_map_remove_add_length.items():
+#     removes_adds_array.append(value)
+write_map_to_excel(vertex_changes_map_add_remove_sum_01, 'vertex_changes_map_add_remove_sum_01.csv')
+write_map_to_excel(vertex_changes_map_add_remove_01, 'vertex_changes_map_add_remove_01.csv')
+write_map_to_excel(vertex_changes_map_add_remove_length_01, 'vertex_changes_map_add_remove_length_01.csv')
+write_map_to_excel(vertex_changes_map_remove_add_sum_01, 'vertex_changes_map_remove_add_sum_01.csv')
+write_map_to_excel(vertex_changes_map_remove_add_01, 'vertex_changes_map_remove_add_01.csv')
+write_map_to_excel(vertex_changes_map_remove_add_length_01, 'vertex_changes_map_remove_add_length_01.csv')
+
+
+write_map_to_excel(vertex_changes_map_add_remove_sum_total, 'vertex_changes_map_add_remove_sum_total.csv')
+write_map_to_excel(vertex_changes_map_add_remove_total, 'vertex_changes_map_add_remove_total.csv')
+write_map_to_excel(vertex_changes_map_add_remove_length_total, 'vertex_changes_map_add_remove_length_total.csv')
+write_map_to_excel(vertex_changes_map_remove_add_sum_total, 'vertex_changes_map_remove_add_sum_total.csv')
+write_map_to_excel(vertex_changes_map_remove_add_total, 'vertex_changes_map_remove_add_total.csv')
+write_map_to_excel(vertex_changes_map_remove_add_length_total, 'vertex_changes_map_remove_add_length_total.csv')
+
+# print(vertex_changes_map_add_remove)
 # print(vertex_changes_map_add_remove_length)
-print()
-print(vertex_changes_map_remove_add_callers)
+# print(vertex_changes_map_add_remove_sum)
+# print()
+# print(vertex_changes_map_remove_add)
 # print(vertex_changes_map_remove_add_length)
-print()
+# print(vertex_changes_map_remove_add_sum)
+
+# print(vertex_changes_map_add_remove_callers)
+# # print(vertex_changes_map_add_remove_length)
+# print()
+# print(vertex_changes_map_remove_add_callers)
+# # print(vertex_changes_map_remove_add_length)
+# print()
 
 # print(sorted(vertex_changes_map_add_remove_length,key = vertex_changes_map_add_remove_length.get))
 print(sorted(adds_removes_array))
