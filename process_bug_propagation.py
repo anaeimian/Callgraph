@@ -8,11 +8,11 @@ def edge_exists_in_graph(edge_info, src_date, dst_date):
     changes = edge_info['changes']
     if changes[0] == "add":
         for index in range(math.floor(len(dates)/2)):
-            if int(dates[2 * index]) <= src_date <= int(dates[2 * index + 1]) and int(dates[2 * index]) <= dst_date <= int(dates[
+            if int(dates[2 * index]) < src_date < int(dates[2 * index + 1]) and int(dates[2 * index]) < dst_date < int(dates[
                     2 * index + 1]):
                 return True
         if len(dates) % 2 == 1:
-            if src_date >= int(dates[len(dates)-1]) and dst_date >= int(dates[len(dates)-1]):
+            if src_date > int(dates[len(dates)-1]) and dst_date > int(dates[len(dates)-1]):
                 return True
     return False
 
@@ -38,5 +38,6 @@ for edge, info in edge_life_cycle_map.items():
                 print(edge)
                 i += 1
                 print(src_commit.strip(), dst_commit.strip())
+                print()
 
 print(i)
