@@ -108,7 +108,7 @@ for key, value in main_functions_map.items():
     vertex_changes_map[value] = {'dates': [], 'commits': []}
 #
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\commits_list_new.txt') as commits_file:
+with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\parents_list.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0

@@ -25,11 +25,11 @@ def search_map(map1, value):
 
 
 i = 0
-with open('edge_life_cycle_map.txt', 'r') as edge_life_cycle_map_file:
+with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\Analysis Results\\new_edge_life_cycle_map.txt', 'r') as edge_life_cycle_map_file:
     edge_life_cycle_map = eval(edge_life_cycle_map_file.read())
 with open('vertex_changes_map_dates_commits.txt', 'r') as vertex_bug_changes_file:
     vertex_bug_changes = eval(vertex_bug_changes_file.read())
-with open('functions_map.txt', 'r') as functions_map_file:
+with open('hadoop_new_functions_map.txt', 'r') as functions_map_file:
     functions_map = eval(functions_map_file.read())
 
 for edge, info in edge_life_cycle_map.items():

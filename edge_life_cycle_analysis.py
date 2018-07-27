@@ -92,8 +92,9 @@ vertex_changes_map = {}
 edge_life_cycle_map = {}
 
 # path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
+# basic_path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\\"
 basic_path = "C:\\Users\\anaeimia\Documents\Thesis\Spark\\"
-path = basic_path + "himrod docs\spark\\d107b3b910d8f434fb15b663a9db4c2dfe0a9f43\\"
+path = basic_path + "himrod docs\spark\\68c07ea198df8649ac41b2bf527edbf4d5dda88d\\"
 
 classes = open(path + 'classes.txt').read()
 classes = json.loads(classes)
@@ -104,13 +105,13 @@ main_calls_map_copy = main_calls_map
 
 for key, value in main_calls_map.items():
     for item in value:
-        edge_life_cycle_map[(key, item)] = {'dates': [1320125121], 'changes': ['add'], 'commits': ['d107b3b910d8f434fb15b663a9db4c2dfe0a9f43']}
+        edge_life_cycle_map[(key, item)] = {'dates': [1367205573], 'changes': ['add'], 'commits': ['68c07ea198df8649ac41b2bf527edbf4d5dda88d']}
 
 for key, value in main_functions_map.items():
     vertex_changes_map[value] = {'psd': 0, 'pds': 0, 'psd_date': 0, 'pds_date': 0}
 
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open(basic_path + 'commits_list_new.txt') as commits_file:
+with open(basic_path + 'parents_list.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0
@@ -120,17 +121,19 @@ prev_functions_diff_removed = 0
 
 for commit in content:
     print(index, 'index\n')
-    if commit.strip() == "d107b3b910d8f434fb15b663a9db4c2dfe0a9f43":
+    if commit.strip() == "68c07ea198df8649ac41b2bf527edbf4d5dda88d":
         print("continue")
         continue
 
     path = basic_path + "\himrod docs\spark\\" + commit.strip() + "\\"
+    # path = basic_path + "\hadoop\\" + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
+        classes = json.loads(classes)
     except:
         continue
 
-    classes = json.loads(classes)
+
 
     class_map = {}
     functions_map = {}
@@ -242,5 +245,5 @@ for commit in content:
     print(commit)
     index += 1
 
-with open(basic_path + 'Analysis Results\edge_life_cycle_map.txt', 'w') as edge_life_cycle_map_file:
+with open(basic_path + 'Analysis Results\\new_edge_life_cycle_map.txt', 'w') as edge_life_cycle_map_file:
     edge_life_cycle_map_file.write(str(edge_life_cycle_map))

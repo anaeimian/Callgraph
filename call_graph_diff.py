@@ -84,7 +84,7 @@ def extract_maps(classes):
 
 
 base_path = "C:\\Users\\anaeimia\Documents\Thesis\Spark\\"
-path = base_path + "himrod docs\spark\d107b3b910d8f434fb15b663a9db4c2dfe0a9f43\\"
+path = base_path + "himrod docs\spark\\68c07ea198df8649ac41b2bf527edbf4d5dda88d\\"
 classes = open(path + 'classes.txt').read()
 classes = json.loads(classes)
 main_classes_map, main_functions_map, main_calls_map, class_index, function_index = extract_maps(classes)
@@ -92,7 +92,7 @@ main_classes_map_copy = main_classes_map
 main_functions_map_copy = main_functions_map
 main_calls_map_copy = main_calls_map
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open(base_path + 'commits_list_new.txt') as commits_file:
+with open(base_path + 'parents_list.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0
@@ -109,26 +109,29 @@ for key, value in main_functions_map.items():
 print(in_degree_map)
 print(out_degree_map)
 # content = []
-
+missing_commits = 0
 for commit in content:
     print(index, 'index\n')
     # if index != 1000:
     #     continue
     # else:
     #     # print(commit.)
-    if commit.strip() == "d107b3b910d8f434fb15b663a9db4c2dfe0a9f43":
+    if commit.strip() == "68c07ea198df8649ac41b2bf527edbf4d5dda88d":
         print("continue")
         continue
 
     path = base_path + 'himrod docs\spark\\' + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
+        classes = json.loads(classes)
     except:
+        index += 1
+        missing_commits += 1
         continue
     #     hadoop_number -= 1
     #     print(index)
 
-    classes = json.loads(classes)
+
 
     class_map = {}
     functions_map = {}
@@ -208,7 +211,7 @@ for commit in content:
     #     with open('final_call_graph.txt', 'w') as final_call_graph:
     #         final_call_graph.write(str(calls_map))
     #     print("file index!")
-    # index += 1
+    index += 1
 
     result_text = ""
     for item in added_functions:
@@ -221,7 +224,8 @@ for commit in content:
     for key2, value2 in removed_calls.items():
         for item2 in value2:
             result_text += "- " + str(key2) + " " + str(item2) + " \n"
-    with open(path + 'diff.txt', 'w') as diff:
+    with open(path + 'new_diff.txt', 'w') as diff:
+    # with open(path + 'new_diff.txt', 'w') as diff:
         diff.write(result_text)
     print(result_text)
     print(commit)
@@ -238,10 +242,10 @@ for commit in content:
     #         edges_file += str(key) + "," + str(value_item)+',call\n'
     # with open(path + 'edges.csv', 'w') as edges:
     #     edges.write(edges_file)
-
-# with open("classes_map.txt", 'w') as classes_map:
-#     classes_map.write(str(main_classes_map))
-# with open("functions_map.txt", 'w') as functions_map:
-#     functions_map.write(str(main_functions_map))
-# with open("calls_map.txt", 'w') as calls_map:
-#     calls_map.write(str(main_calls_map))
+print("missing commits", missing_commits)
+with open("spark_classes_map.txt", 'w') as classes_map:
+    classes_map.write(str(main_classes_map))
+with open("spark_functions_map.txt", 'w') as functions_map:
+    functions_map.write(str(main_functions_map))
+with open("spark_calls_map.txt", 'w') as calls_map:
+    calls_map.write(str(main_calls_map))
