@@ -1,0 +1,10 @@
+org.apache.hadoop.metrics2.lib.MutableStat.snapshot() org.apache.hadoop.metrics2.util.SampleStat.copyTo()
+067ec8c2b14fb0929dc348b763383838e06ff8a5
+- org.apache.hadoop.metrics2.lib.MutableStat.snapshot() org.apache.hadoop.metrics2.lib.MutableStat.lastStat()
+3dbad5d823b8bf61b643dd1057165044138b99e0
++ org.apache.hadoop.metrics2.util.SampleStat.copyTo() org.apache.hadoop.metrics2.util.SampleStat.total()
+
+
+###########################################################
+
+

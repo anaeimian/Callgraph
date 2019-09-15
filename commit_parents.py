@@ -1,6 +1,6 @@
 import git
 
-base_path = "C:\\Users\\anaeimia\Documents\Thesis\Spark\spark\\"
+base_path = "C:\\Users\\anaeimia\Documents\Thesis\hadoop_new_version\hadoop"
 repo_directory_address = base_path
 repository = git.Repo(repo_directory_address)
 commit = repository.head.commit
@@ -11,4 +11,4 @@ while commit.parents:
     # print(len(commit.parents))
     commit = parent
     index += 1
-    print(commit)
+    print(commit.committed_date)

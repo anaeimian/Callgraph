@@ -34,7 +34,7 @@ def subtract_two_maps(map1, map2):
             array1 = map1[key]
             array2 = map2[key]
         except Exception as e:
-            print(e, 'error')
+            # print(e, 'error')
             continue
         set1 = set(array1)
         set2 = set(array2)
@@ -89,13 +89,8 @@ def extract_maps(classes):
 
 
 vertex_changes_map = {}
-edge_life_cycle_map = {}
 
-# path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
-# basic_path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\\"
-basic_path = "C:\\Users\\anaeimia\Documents\Thesis\Spark\\"
-path = basic_path + "himrod docs\spark\\68c07ea198df8649ac41b2bf527edbf4d5dda88d\\"
-
+path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
 classes = open(path + 'classes.txt').read()
 classes = json.loads(classes)
 main_classes_map, main_functions_map, main_calls_map, class_index, function_index = extract_maps(classes)
@@ -103,20 +98,11 @@ main_classes_map_copy = main_classes_map
 main_functions_map_copy = main_functions_map
 main_calls_map_copy = main_calls_map
 
-for key, value in main_calls_map.items():
-    for item in value:
-        edge_life_cycle_map[(key, item)] = {'dates': [1367205573], 'changes': ['add'], 'commits': ['68c07ea198df8649ac41b2bf527edbf4d5dda88d']}
-        # edge_life_cycle_map[(key, item)] = {'dates': [1320125121], 'changes': ['add'], 'commits': ['a6c110ebd05155fa5bdae4e2d195493d2d04dd4f']}
-
 for key, value in main_functions_map.items():
     vertex_changes_map[value] = {'psd': 0, 'pds': 0, 'psd_date': 0, 'pds_date': 0}
 
-with open('C:\\Users\\anaeimia\Documents\Thesis\Spark\Analysis Results\\no_java_commits.txt',
-          'r') as no_java_commits_file:
-    no_java_commits = no_java_commits_file.readlines()
-
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open(basic_path + 'parents_list.txt') as commits_file:
+with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\commits_list_new.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0
@@ -126,22 +112,16 @@ prev_functions_diff_removed = 0
 
 for commit in content:
     print(index, 'index\n')
-    # if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
-    if commit.strip() == "68c07ea198df8649ac41b2bf527edbf4d5dda88d":
+    if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
         print("continue")
         continue
-
-    if commit in no_java_commits:
-        print("no java commit")
-        continue
-
-    path = basic_path + "\himrod docs\spark\\" + commit.strip() + "\\"
-    # path = basic_path + "\hadoop\\" + commit.strip() + "\\"
+    path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\" + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
-        classes = json.loads(classes)
     except:
         continue
+
+    classes = json.loads(classes)
 
     class_map = {}
     functions_map = {}
@@ -179,15 +159,15 @@ for commit in content:
                 new_functions.append(class_item['class_name'] + '.' + function_item['function_name'])
                 main_functions_map[class_item['class_name'] + '.' + function_item['function_name']] = function_index
                 current_functions_array.append(function_index)
-
                 function_index += 1
 
     added_functions = set(current_functions_array) - set(last_functions)
     removed_functions = set(last_functions) - set(current_functions_array)
-    print(added_functions, 'added functions')
-    print(removed_functions, 'removed functions')
+    # if commit.strip() == "4e7c4a6e1fd00767d966cd2482a364b2eacbd35b" or commit.strip() == "e6bdb33784530f57a41e1b3cd1b0a1f601ca5b88" or commit.strip() == "021ae471153ce2566924b0f6d29809669074c06d":
+        # print(added_functions, 'added functions')
+        # print(removed_functions, 'removed functions')
+        # print()
     last_functions = current_functions_array
-
     for class_item in classes:
         for function_item in class_item['functions']:
             calls_number += 1
@@ -196,63 +176,32 @@ for commit in content:
                     function_item['calls'], main_functions_map)
                 calls_map[main_functions_map[
                     class_item['class_name'] + '.' + function_item['function_name']]] = callee_mapping
+
             except Exception as e:
                 bug_number += 1
+    if commit.strip() == "4e7c4a6e1fd00767d966cd2482a364b2eacbd35b" or commit.strip() == "e6bdb33784530f57a41e1b3cd1b0a1f601ca5b88" or commit.strip() == "021ae471153ce2566924b0f6d29809669074c06d":
+        print(calls_map[413], 'calls map')
     added_calls, removed_calls = subtract_two_maps(calls_map, last_calls_map)
 
-    try:
-        commit_date = open(path + 'date.txt').readlines()[0].strip()
-        # commit_date = open(path + 'new_date.txt').readlines()[0].strip()
-    except:
-        commit_date = 0
-        continue
-
-    for key, value in removed_calls.items():
-        for item in value:
-            try:
-                dates = edge_life_cycle_map[(key, item)]['dates']
-            except:
-                dates = []
-            try:
-                array = edge_life_cycle_map[(key, item)]['changes']
-            except:
-                array = []
-            try:
-                commits_array = edge_life_cycle_map[(key, item)]['commits']
-            except:
-                commits_array = []
-
-            dates.append(commit_date)
-            array.append('remove')
-            commits_array.append(commit)
-            edge_life_cycle_map[(key, item)] = {'dates': dates, 'changes': array, 'commits': commits_array}
-
-    for key, value in added_calls.items():
-        for item in value:
-            try:
-                dates = edge_life_cycle_map[(key, item)]['dates']
-            except:
-                dates = []
-            try:
-                array = edge_life_cycle_map[(key, item)]['changes']
-            except:
-                array = []
-
-            try:
-                commits_array = edge_life_cycle_map[(key, item)]['commits']
-            except:
-                commits_array = []
-
-            dates.append(commit_date)
-            commits_array.append(commit)
-            array.append('add')
-            edge_life_cycle_map[(key, item)] = {'dates': dates, 'changes': array, 'commits': commits_array}
-
     last_calls_map = calls_map
-    print(bug_number, 'bug')
+    # print(bug_number, 'bug')
+    if commit.strip() == "4e7c4a6e1fd00767d966cd2482a364b2eacbd35b" or commit.strip() == "e6bdb33784530f57a41e1b3cd1b0a1f601ca5b88" or commit.strip() == "021ae471153ce2566924b0f6d29809669074c06d":
+        print(commit)
 
-    print(commit)
     index += 1
 
-with open(basic_path + 'Analysis Results\\spark_edge_life_cycle_map.txt', 'w') as edge_life_cycle_map_file:
-    edge_life_cycle_map_file.write(str(edge_life_cycle_map))
+with open('vertex_changes_dic.txt', 'w') as vertex_changes_file:
+    vertex_changes_file.write(str(vertex_changes_map))
+text = ""
+psd_total = 0
+pds_total = 0
+new_index = 0
+for key, value in vertex_changes_map.items():
+    text += str(key) + " psd: " + str(value['psd']) + " pds: " + str(value['pds']) + "\n"
+    psd_total += value['psd']
+    pds_total += value['pds']
+    new_index += 1
+text += "pds average:" + str(pds_total / new_index) + "\n"
+text += "psd average:" + str(psd_total / new_index) + "\n"
+with open('vertex_changes_map_new.txt', 'w') as vertex_changes_map_file:
+    vertex_changes_map_file.write(str(text))

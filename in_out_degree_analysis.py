@@ -149,7 +149,7 @@ for key, value in main_functions_map.items():
     vertex_bug_propagation_time_map[value] = []
 
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open(basic_path + 'commits_list_new.txt') as commits_file:
+with open(basic_path + 'parents_list.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0
@@ -168,7 +168,7 @@ buggy_out_degree_avg_array = []
 bug_propagated_in_degree_avg_array = []
 bug_propagated_out_degree_avg_array = []
 
-with open('vertex_bug_changes_date_map.txt') as vertex_bug_changes_file:
+with open('C:\\Users\\anaeimia\Documents\Thesis\Spark\Analysis Results\spark_vertex_changes_map_dates_commits.txt') as vertex_bug_changes_file:
     vertex_bug_changes_map = eval(vertex_bug_changes_file.read())
 
 for commit in content:
@@ -182,10 +182,11 @@ for commit in content:
     path = basic_path + "himrod docs\spark\\" + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
+        classes = json.loads(classes)
     except:
         continue
 
-    classes = json.loads(classes)
+
 
     class_map = {}
     functions_map = {}
@@ -256,24 +257,24 @@ for commit in content:
     for caller, callee_list in calls_map.items():
         in_degree_array.append(len(get_callers(caller, calls_map)))
         out_degree_array.append(len(callee_list))
-        if vertex_bug_changes_map[caller]:
+        if vertex_bug_changes_map[caller]['dates']:
             buggy_in_degree_array.append(len(get_callers(caller, calls_map)))
             buggy_out_degree_array.append(len(callee_list))
-        for item in callee_list:
-            if vertex_bug_changes_map[caller] and vertex_bug_changes_map[item]:
-                buggy_in_degree_array.append(len(get_callers(item, calls_map)))
-                buggy_out_degree_array.append(len(get_callees(item, calls_map)))
-                date_array_source = vertex_bug_changes_map[caller]
-                date_array_dst = vertex_bug_changes_map[item]
-                date_diff = source_dst_date_diff(date_array_dst, date_array_source)
-                if date_diff:
-                    if not src_dst_exists(caller, item, vertex_bug_propagation_time_map):
-                        insert_time_map(caller, item, date_diff, vertex_bug_propagation_time_map)
-                        propagation_time_index += 1
-                        propagation_time_total += date_diff
-                        propagation_time_array.append(date_diff)
-                        bug_propagated_in_degree_array.append(len(get_callers(caller, calls_map)))
-                        bug_propagated_out_degree_array.append(len(callee_list))
+        # for item in callee_list:
+        #     if vertex_bug_changes_map[caller] and vertex_bug_changes_map[item]:
+        #         buggy_in_degree_array.append(len(get_callers(item, calls_map)))
+        #         buggy_out_degree_array.append(len(get_callees(item, calls_map)))
+        #         date_array_source = vertex_bug_changes_map[caller]['dates']
+        #         date_array_dst = vertex_bug_changes_map[item]
+        #         date_diff = source_dst_date_diff(date_array_dst, date_array_source)
+        #         if date_diff:
+        #             if not src_dst_exists(caller, item, vertex_bug_propagation_time_map):
+        #                 insert_time_map(caller, item, date_diff, vertex_bug_propagation_time_map)
+        #                 propagation_time_index += 1
+        #                 propagation_time_total += date_diff
+        #                 propagation_time_array.append(date_diff)
+        #                 bug_propagated_in_degree_array.append(len(get_callers(caller, calls_map)))
+        #                 bug_propagated_out_degree_array.append(len(callee_list))
     if in_degree_array:
         in_degree_avg_array.append(statistics.mean(in_degree_array))
     if out_degree_array:
@@ -305,15 +306,15 @@ print("buggy out degree average: ", statistics.mean(buggy_out_degree_avg_array))
 print("bug propagated in degree average: ", statistics.mean(bug_propagated_in_degree_avg_array))
 print("bug propagated out degree average: ", statistics.mean(bug_propagated_out_degree_avg_array))
 
-with open(basic_path + 'Analysis Results\in_degree_avg_array.txt', 'w') as in_degree_avg_array_file:
-    in_degree_avg_array_file.write(str(in_degree_avg_array))
-with open('out_degree_avg_array.txt', 'w') as out_degree_avg_array_file:
-    out_degree_avg_array_file.write(str(out_degree_avg_array))
-with open('buggy_in_degree_avg_array.txt', 'w') as buggy_in_degree_avg_array_file:
-    buggy_in_degree_avg_array_file.write(str(buggy_in_degree_avg_array))
-with open('buggy_out_degree_avg_array.txt', 'w') as buggy_out_degree_avg_array_file:
-    buggy_out_degree_avg_array_file.write(str(buggy_out_degree_avg_array))
-with open('bug_propagated_in_degree_avg_array.txt', 'w') as bug_propagated_in_degree_avg_array_file:
-    bug_propagated_in_degree_avg_array_file.write(str(bug_propagated_in_degree_avg_array))
-with open('bug_propagated_out_degree_avg_array.txt', 'w') as bug_propagated_out_degree_avg_array_file:
-    bug_propagated_out_degree_avg_array_file.write(str(bug_propagated_out_degree_avg_array))
+# with open(basic_path + 'Analysis Results\in_degree_avg_array.txt', 'w') as in_degree_avg_array_file:
+#     in_degree_avg_array_file.write(str(in_degree_avg_array))
+# with open('out_degree_avg_array.txt', 'w') as out_degree_avg_array_file:
+#     out_degree_avg_array_file.write(str(out_degree_avg_array))
+# with open('buggy_in_degree_avg_array.txt', 'w') as buggy_in_degree_avg_array_file:
+#     buggy_in_degree_avg_array_file.write(str(buggy_in_degree_avg_array))
+# with open('buggy_out_degree_avg_array.txt', 'w') as buggy_out_degree_avg_array_file:
+#     buggy_out_degree_avg_array_file.write(str(buggy_out_degree_avg_array))
+# with open('bug_propagated_in_degree_avg_array.txt', 'w') as bug_propagated_in_degree_avg_array_file:
+#     bug_propagated_in_degree_avg_array_file.write(str(bug_propagated_in_degree_avg_array))
+# with open('bug_propagated_out_degree_avg_array.txt', 'w') as bug_propagated_out_degree_avg_array_file:
+#     bug_propagated_out_degree_avg_array_file.write(str(bug_propagated_out_degree_avg_array))

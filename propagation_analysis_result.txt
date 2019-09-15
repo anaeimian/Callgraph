@@ -1,0 +1,261 @@
+(98, 107)
+org.apache.hadoop.metrics2.lib.MutableStat.snapshot() org.apache.hadoop.metrics2.util.SampleStat.copyTo()
+
+067ec8c2b14fb0929dc348b763383838e06ff8a5 3dbad5d823b8bf61b643dd1057165044138b99e0
+source: - org.apache.hadoop.metrics2.lib.MutableStat.lastStat()
+destination: + org.apache.hadoop.metrics2.util.SampleStat.total()
+
+(98, 112)
+org.apache.hadoop.metrics2.lib.MutableStat.snapshot() org.apache.hadoop.metrics2.util.SampleStat.reset()
+
+067ec8c2b14fb0929dc348b763383838e06ff8a5 3dbad5d823b8bf61b643dd1057165044138b99e0
+source: - org.apache.hadoop.metrics2.lib.MutableStat.lastStat()
+destination: + org.apache.hadoop.metrics2.util.SampleStat.total()
+
+(230, 245)
+org.apache.hadoop.http.HttpServer.hasAdministratorAccess() org.apache.hadoop.conf.Configuration.getBoolean()
+
+e29ede3f729784f0eb770f0a1570bea199ff6902 d1c6accb6f87b08975175580e15f1ff1fe29ab04
+source: - org.apache.hadoop.security.authorize.AccessControlList.toString()
+destination: + org.apache.hadoop.util.StringUtils.equalsIgnoreCase()
+
+(248, 247)
+org.apache.hadoop.conf.Configuration.getClasses() org.apache.hadoop.conf.Configuration.getClassByName()
+
+82d57ee7fee82919b42066af38063a27d0998806 063be5749df0e4ccb8f6fa4794b3d29a8f3a0afa
+source: + org.apache.hadoop.conf.Configuration.getRaw()
+destination: + org.apache.hadoop.conf.Configuration.getClassByNameOrNull()
+
+(760, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.append() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.append()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(761, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.create() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.create()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(762, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.delete() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.delete()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(765, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.getFileBlockLocations() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.getFileBlockLocations()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(766, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.getFileChecksum() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.getFileChecksum()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(767, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.getFileStatus() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.getFileStatus()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(773, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.getStatus() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.getStatus()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(777, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.listStatus() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.listStatus()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(779, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.mkdirs() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.mkdirs()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(780, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.open() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.open()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(781, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.rename() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.rename()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(782, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.setOwner() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.setOwner()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(783, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.setPermission() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.setPermission()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(784, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.setReplication() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.setReplication()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(785, 763)
+org.apache.hadoop.fs.viewfs.ChRootedFileSystem.setTimes() org.apache.hadoop.fs.viewfs.ChRootedFileSystem.fullPath()
+
+e918b91e23985fa1bb353c54a2e733f8ba6dbe49 51e520c68aafb73b784bf690a8a42de3af0f229c
+source: + org.apache.hadoop.fs.FileSystem.setTimes()
+destination: + org.apache.hadoop.fs.Path.isRoot()
+
+(1714, 4066)
+org.apache.hadoop.fs.FsShell.main() org.apache.hadoop.util.ToolRunner.run()
+
+3ab7f86c16c0c3df89f5157aab0bb5d66fbcc2d5 8676a118a12165ae5a8b80a2a4596c133471ebc1
+source: + org.apache.hadoop.conf.Configured.setConf()
+source: + org.apache.hadoop.conf.Configuration.setQuietMode()
+destination: + org.apache.hadoop.ipc.CallerContext.Builder.build()
+destination: + org.apache.hadoop.ipc.CallerContext.getCurrent()
+destination: + org.apache.hadoop.ipc.CallerContext.setCurrent()
+
+(1714, 1709)
+org.apache.hadoop.fs.FsShell.main() org.apache.hadoop.fs.FsShell.close()
+
+3ab7f86c16c0c3df89f5157aab0bb5d66fbcc2d5 69b095730bd87706ddcbabeea6c513290ee4cdf5
+source: + org.apache.hadoop.conf.Configured.setConf()
+source: + org.apache.hadoop.conf.Configuration.setQuietMode()
+destination: + org.apache.hadoop.tracing.SpanReceiverHost.closeReceivers()
+
+(1717, 1713)
+org.apache.hadoop.fs.FsShell.run() org.apache.hadoop.fs.FsShell.init()
+
+aaafa0b2ee64f6cfb7fdc717500e1c483b9df8cc 69b095730bd87706ddcbabeea6c513290ee4cdf5
+source: + org.apache.hadoop.fs.shell.Command.getCommandName()
+source: + org.apache.hadoop.conf.Configured.getConf()
+destination: + org.apache.hadoop.tracing.SpanReceiverHost.get()
+
+(1928, 342)
+org.apache.hadoop.fs.FileSystem.Cache.remove() org.apache.hadoop.fs.FileSystem.get()
+
+8a0c7323ce36032a56c228fc8076d9d3214274ba fb4a6ac9e995c79475af99aea044e0fc0558e9b6
+source: + org.apache.hadoop.util.ShutdownHookManager.get()
+source: + org.apache.hadoop.util.ShutdownHookManager.removeShutdownHook()
+destination: + org.apache.hadoop.security.UserGroupInformation.getBestUGI()
+destination: - org.apache.hadoop.security.UserGroupInformation.getCurrentUser()
+destination: - org.apache.hadoop.security.UserGroupInformation.createRemoteUser()
+
+(2327, 2580)
+org.apache.hadoop.fs.shell.CommandWithDestination.processArguments() org.apache.hadoop.fs.shell.PathData.toString()
+
+97d104767d57629290cdab74941862cc45f09ee5 e588ffe3c09c74c94eb6bfc3071310191fbf9e1f
+source: + org.apache.hadoop.fs.shell.PathData.parentExists()
+destination: - org.apache.hadoop.fs.Path.isWindowsAbsolutePath()
+
+(3107, 500)
+org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier.getUser() org.apache.hadoop.security.UserGroupInformation.createRemoteUser()
+
+b3b72482e4476fe6ead484e85b55c766bcf998d0 05b8e8f7c17a7d011a6a918179ee2f112a436759
+source: + org.apache.hadoop.security.UserGroupInformation.setAuthenticationMethod()
+destination: - org.apache.hadoop.security.UserGroupInformation.setAuthenticationMethod()
+
+(1513, 4949)
+org.apache.hadoop.fs.FileUtil.symLink() org.apache.hadoop.util.Shell.getSymlinkCommand()
+
+f2942687d44caaaedae98132024f8fc1dc4a884a dfa78484633b3ce21471d527b9c24671e3ca5df9
+source: + org.apache.hadoop.fs.Path.toString()
+source: + org.apache.hadoop.fs.Path.getPathWithoutSchemeAndAuthority()
+source: + org.apache.hadoop.fs.Path.isAbsolute()
+destination: + org.apache.hadoop.util.Shell.getWinUtilsPath()
+destination: - org.apache.hadoop.util.Shell.getWinutilsPath()
+
+26
+
+
+
+(507, 525)
+org.apache.hadoop.security.UserGroupInformation.getLoginUser() org.apache.hadoop.security.UserGroupInformation.setAuthenticationMethod()
+
+aeb364d8b57f4de79d3489bef2071cea9c0c840e f6c01e2f8e02e4cba7912d185e110b06102fc8c1
+source: + org.apache.hadoop.security.Credentials.addTokensToUGI()
+source: - org.apache.hadoop.security.Credentials.getAllTokens()
+source: - org.apache.hadoop.security.UserGroupInformation.addToken()
+destination: + org.apache.hadoop.security.User.setAuthenticationMethod()
+
+(940, 276)
+org.apache.hadoop.fs.permission.FsPermission.setUMask() org.apache.hadoop.conf.Configuration.set()
+
+b21dffb1fec376784810af89cfc9cc05e5f781ce 3e8c273f3721416f84fb530a0d73ab8442a5c025
+source: - org.apache.hadoop.conf.Configuration.setInt()
+destination: + org.apache.hadoop.conf.Configuration.isDeprecated()
+
+(2322, 2323)
+org.apache.hadoop.fs.shell.CommandWithDestination.copyFileToTarget() org.apache.hadoop.fs.shell.CommandWithDestination.copyStreamToTarget()
+
+6a9ccd809bbc9d5f9cf1d75bf4819b211619440a 12d0e025919cfb375ecb1739fe99e92421beb56c
+source: + org.apache.hadoop.io.IOUtils.closeStream()
+destination: + org.apache.hadoop.fs.shell.PathData.suffix()
+destination: - org.apache.hadoop.fs.FileSystem.rename()
+destination: - org.apache.hadoop.conf.Configured.getConf()
+destination: - org.apache.hadoop.fs.shell.PathData.createTempFile()
+destination: - org.apache.hadoop.fs.shell.PathExceptions.PathIOException.setOperation()
+destination: - org.apache.hadoop.fs.shell.PathExceptions.PathIOException.setTargetPath()
+destination: - org.apache.hadoop.fs.FileSystem.delete()
+destination: - org.apache.hadoop.fs.shell.PathData.toString()
+destination: - org.apache.hadoop.io.IOUtils.copyBytes()
+
+(2330, 2326)
+org.apache.hadoop.fs.shell.CommandWithDestination.recursePath() org.apache.hadoop.fs.shell.CommandWithDestination.getTargetPath()
+
+c3e26735a662e478005c8c75b0909797a22cd640 af3163d1d1e144a55fc448110a6ba6cdca7204c0
+source: + org.apache.hadoop.fs.shell.CommandWithDestination.preserveAttributes()
+destination: + org.apache.hadoop.fs.shell.PathData.representsDirectory()
+
+(2330, 2580)
+org.apache.hadoop.fs.shell.CommandWithDestination.recursePath() org.apache.hadoop.fs.shell.PathData.toString()
+
+c3e26735a662e478005c8c75b0909797a22cd640 e588ffe3c09c74c94eb6bfc3071310191fbf9e1f
+source: + org.apache.hadoop.fs.shell.CommandWithDestination.preserveAttributes()
+destination: - org.apache.hadoop.fs.Path.isWindowsAbsolutePath()
+
+(3180, 3178)
+org.apache.hadoop.fs.shell.Ls.processPath() org.apache.hadoop.fs.shell.Ls.formatSize()
+
+65158e478f135ec051c1939bd5f371818365dffd ef2ff99d36752d2e95236c4ab8e5290a2e41e5bf
+source: + org.apache.hadoop.fs.permission.FsPermission.getAclBit()
+destination: + org.apache.hadoop.util.StringUtils.TraditionalBinaryPrefix.long2String()
+destination: - org.apache.hadoop.util.StringUtils.humanReadableInt()
+
+(497, 523)
+org.apache.hadoop.security.UserGroupInformation.checkTGTAndReloginFromKeytab() org.apache.hadoop.security.UserGroupInformation.reloginFromKeytab()
+
+59cf7588779145ad5850ad63426743dfe03d8347 7fc3e68a876132563aa2321519fc6941e37b2cae
+source: - org.apache.hadoop.util.Time.now()
+source: - org.apache.hadoop.security.UserGroupInformation.isSecurityEnabled()
+destination: + org.apache.hadoop.security.UserGroupInformation.fixKerberosTicketOrder()
+
+7
+
+

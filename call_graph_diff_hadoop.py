@@ -1,14 +1,4 @@
-## This file records an array of buggy commit ids that changed a vertex (function) for that vertex.
-
 import json
-
-
-def get_callers(node, call_graph):
-    callers = []
-    for caller, callees in call_graph.items():
-        if node in callees:
-            callers.append(caller)
-    return callers
 
 
 def get_callee_number(calls_map):
@@ -34,7 +24,8 @@ def subtract_two_maps(map1, map2):
             array1 = map1[key]
             array2 = map2[key]
         except Exception as e:
-            print(e, 'error')
+            print(e, 'error', )
+            # print(map1)
             continue
         set1 = set(array1)
         set2 = set(array2)
@@ -45,6 +36,9 @@ def subtract_two_maps(map1, map2):
         if len(removed_calls) > 0:
             map_removed[key] = list(removed_calls)
     return map_added, map_removed
+
+
+# def get_calls_difference():
 
 
 def extract_maps(classes):
@@ -85,63 +79,59 @@ def extract_maps(classes):
                         # print(e, class_item['class_name'], callee_item)
                         error_counter += 1
                     continue
+    # print(class_index, function_index, call_index)
     return classes_map, functions_map, calls_map, class_index, function_index
 
 
-vertex_changes_map = {}
-edge_life_cycle_map = {}
-
-# path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
-# basic_path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\\"
-basic_path = "C:\\Users\\anaeimia\Documents\Thesis\Spark\\"
-path = basic_path + "himrod docs\spark\\68c07ea198df8649ac41b2bf527edbf4d5dda88d\\"
-
+base_path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\"
+path = base_path + "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
 classes = open(path + 'classes.txt').read()
 classes = json.loads(classes)
 main_classes_map, main_functions_map, main_calls_map, class_index, function_index = extract_maps(classes)
 main_classes_map_copy = main_classes_map
 main_functions_map_copy = main_functions_map
 main_calls_map_copy = main_calls_map
-
-for key, value in main_calls_map.items():
-    for item in value:
-        edge_life_cycle_map[(key, item)] = {'dates': [1367205573], 'changes': ['add'], 'commits': ['68c07ea198df8649ac41b2bf527edbf4d5dda88d']}
-        # edge_life_cycle_map[(key, item)] = {'dates': [1320125121], 'changes': ['add'], 'commits': ['a6c110ebd05155fa5bdae4e2d195493d2d04dd4f']}
-
-for key, value in main_functions_map.items():
-    vertex_changes_map[value] = {'psd': 0, 'pds': 0, 'psd_date': 0, 'pds_date': 0}
-
-with open('C:\\Users\\anaeimia\Documents\Thesis\Spark\Analysis Results\\no_java_commits.txt',
-          'r') as no_java_commits_file:
-    no_java_commits = no_java_commits_file.readlines()
-
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open(basic_path + 'parents_list.txt') as commits_file:
+with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\parents_list.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0
 last_calls_map = {}
 last_functions = []
 prev_functions_diff_removed = 0
+in_degree_map = {}
+out_degree_map = {}
 
+for key, value in main_functions_map.items():
+    in_degree_map[value] = 0
+    out_degree_map[value] = 0
+
+print(in_degree_map)
+print(out_degree_map)
+# content = []
+missing_commit = 0
 for commit in content:
     print(index, 'index\n')
-    # if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
-    if commit.strip() == "68c07ea198df8649ac41b2bf527edbf4d5dda88d":
+    # if index != 1000:
+    #     continue
+    # else:
+    #     # print(commit.)
+    if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
         print("continue")
         continue
 
-    if commit in no_java_commits:
-        print("no java commit")
-        continue
-
-    path = basic_path + "\himrod docs\spark\\" + commit.strip() + "\\"
-    # path = basic_path + "\hadoop\\" + commit.strip() + "\\"
+    path = base_path + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
         classes = json.loads(classes)
     except:
+        index += 1
+        missing_commit += 1
         continue
+    #     hadoop_number -= 1
+    #     print(index)
+
+
 
     class_map = {}
     functions_map = {}
@@ -164,7 +154,10 @@ for commit in content:
             main_classes_map[class_item['class_name']] = class_index
             class_index += 1
     new_classes_set = set(new_classes)
+    # classes_diff_removed = set(main_classes_map) - set(class_map)
+    # new_classes_set = new_classes_set | set(class_map)
 
+    # break
     current_functions_array = []
     for class_item in classes:
         for function_item in class_item['functions']:
@@ -179,80 +172,79 @@ for commit in content:
                 new_functions.append(class_item['class_name'] + '.' + function_item['function_name'])
                 main_functions_map[class_item['class_name'] + '.' + function_item['function_name']] = function_index
                 current_functions_array.append(function_index)
-
+                in_degree_map[function_index] = 0
+                out_degree_map[function_index] = 0
                 function_index += 1
 
     added_functions = set(current_functions_array) - set(last_functions)
     removed_functions = set(last_functions) - set(current_functions_array)
-    print(added_functions, 'added functions')
-    print(removed_functions, 'removed functions')
+    # print(added_functions, 'added functions')
+    # print(removed_functions, 'removed functions')
     last_functions = current_functions_array
 
     for class_item in classes:
         for function_item in class_item['functions']:
             calls_number += 1
             try:
-                callee_mapping = get_callee_mapping(
-                    function_item['calls'], main_functions_map)
                 calls_map[main_functions_map[
-                    class_item['class_name'] + '.' + function_item['function_name']]] = callee_mapping
+                    class_item['class_name'] + '.' + function_item['function_name']]] = get_callee_mapping(
+                    function_item['calls'], main_functions_map)
+                out_degree_map[
+                    main_functions_map[class_item['class_name'] + '.' + function_item['function_name']]] += len(
+                    function_item['calls'])
+                # in_degree_map[
+                #     main_functions_map[class_item['class_name'] + '.' + function_item['function_name']]] += len(
+                #     function_item['calls'])
             except Exception as e:
                 bug_number += 1
     added_calls, removed_calls = subtract_two_maps(calls_map, last_calls_map)
-
-    try:
-        commit_date = open(path + 'date.txt').readlines()[0].strip()
-        # commit_date = open(path + 'new_date.txt').readlines()[0].strip()
-    except:
-        commit_date = 0
-        continue
-
-    for key, value in removed_calls.items():
-        for item in value:
-            try:
-                dates = edge_life_cycle_map[(key, item)]['dates']
-            except:
-                dates = []
-            try:
-                array = edge_life_cycle_map[(key, item)]['changes']
-            except:
-                array = []
-            try:
-                commits_array = edge_life_cycle_map[(key, item)]['commits']
-            except:
-                commits_array = []
-
-            dates.append(commit_date)
-            array.append('remove')
-            commits_array.append(commit)
-            edge_life_cycle_map[(key, item)] = {'dates': dates, 'changes': array, 'commits': commits_array}
-
-    for key, value in added_calls.items():
-        for item in value:
-            try:
-                dates = edge_life_cycle_map[(key, item)]['dates']
-            except:
-                dates = []
-            try:
-                array = edge_life_cycle_map[(key, item)]['changes']
-            except:
-                array = []
-
-            try:
-                commits_array = edge_life_cycle_map[(key, item)]['commits']
-            except:
-                commits_array = []
-
-            dates.append(commit_date)
-            commits_array.append(commit)
-            array.append('add')
-            edge_life_cycle_map[(key, item)] = {'dates': dates, 'changes': array, 'commits': commits_array}
-
+    # print(added_calls, 'added calls')
+    # print(removed_calls, 'removed calls')
     last_calls_map = calls_map
     print(bug_number, 'bug')
 
-    print(commit)
+    # if index == 1000:
+    #     with open('middle_call_graph.txt', 'w') as middle_call_graph:
+    #         middle_call_graph.write(str(calls_map))
+    #
+    # if index > 2500 and len(calls_map) > 10:
+    #     with open('final_call_graph.txt', 'w') as final_call_graph:
+    #         final_call_graph.write(str(calls_map))
+    #     print("file index!")
     index += 1
 
-with open(basic_path + 'Analysis Results\\spark_edge_life_cycle_map.txt', 'w') as edge_life_cycle_map_file:
-    edge_life_cycle_map_file.write(str(edge_life_cycle_map))
+    result_text = ""
+    for item in added_functions:
+        result_text += "+ " + str(item) + " \n"
+    for item in removed_functions:
+        result_text += "- " + str(item) + " \n"
+    for key, value in added_calls.items():
+        for item in value:
+            result_text += "+ " + str(key) + " " + str(item) + " \n"
+    for key2, value2 in removed_calls.items():
+        for item2 in value2:
+            result_text += "- " + str(key2) + " " + str(item2) + " \n"
+    with open(path + 'diff_new.txt', 'w') as diff:
+        diff.write(result_text)
+    print(result_text)
+    print(commit)
+
+    # vertices_file = "id:ID,name:String,:Label\n"
+    # for key, value in main_functions_map.items():
+    #     vertices_file += str(value) + "," + str(key) + ',function\n'
+    # with open(path + 'vertices.csv', 'w') as vertices:
+    #     vertices.write(vertices_file)
+    #
+    # edges_file = "id:START_ID,id:END_ID,:type\n"
+    # for key, value in calls_map.items():
+    #     for value_item in value:
+    #         edges_file += str(key) + "," + str(value_item)+',call\n'
+    # with open(path + 'edges.csv', 'w') as edges:
+    #     edges.write(edges_file)
+print(index)
+with open("hadoop_new_classes_map.txt", 'w') as classes_map:
+    classes_map.write(str(main_classes_map))
+with open("hadoop_new_functions_map.txt", 'w') as functions_map:
+    functions_map.write(str(main_functions_map))
+with open("hadoop_new_calls_map.txt", 'w') as calls_map:
+    calls_map.write(str(main_calls_map))

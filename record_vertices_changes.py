@@ -96,7 +96,10 @@ def extract_maps(classes):
 
 vertex_changes_map = {}
 
-path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
+basic_path = "C:\\Users\\anaeimia\Documents\Thesis\Spark\\"
+path = basic_path + "himrod docs\spark\\68c07ea198df8649ac41b2bf527edbf4d5dda88d\\"
+
+# path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\a6c110ebd05155fa5bdae4e2d195493d2d04dd4f\\"
 classes = open(path + 'classes.txt').read()
 classes = json.loads(classes)
 main_classes_map, main_functions_map, main_calls_map, class_index, function_index = extract_maps(classes)
@@ -108,29 +111,41 @@ for key, value in main_functions_map.items():
     vertex_changes_map[value] = {'dates': [], 'commits': []}
 #
 print(len(main_classes_map), len(main_functions_map), get_callee_number(main_calls_map), 'init\n')
-with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\parents_list.txt') as commits_file:
+# with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\parents_list.txt') as commits_file:
+with open(basic_path + 'parents_list.txt') as commits_file:
     content = commits_file.readlines()
 content.reverse()
 index = 0
 last_calls_map = {}
 last_functions = []
 prev_functions_diff_removed = 0
-
+# Check the commit is not in the no java commits list
+with open('C:\\Users\\anaeimia\Documents\Thesis\Spark\Analysis Results\\no_java_commits.txt',
+          'r') as no_java_commits_file:
+    no_java_commits = no_java_commits_file.readlines()
+temp = 0
 for commit in content:
     print(index, 'index\n')
-    if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
+    print(commit)
+    # if commit.strip() == "a6c110ebd05155fa5bdae4e2d195493d2d04dd4f":
+    if commit.strip() == "68c07ea198df8649ac41b2bf527edbf4d5dda88d":
         print("continue")
         continue
-
-    path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\" + commit.strip() + "\\"
+    if commit in no_java_commits:
+        print("no java commit")
+        temp += 1
+        continue
+    # path = "C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\hadoop\\" + commit.strip() + "\\"
+    path = basic_path + "\himrod docs\spark\\" + commit.strip() + "\\"
     try:
         classes = open(path + 'classes.txt').read()
+        classes = json.loads(classes)
     except:
         continue
     #     hadoop_number -= 1
     #     print(index)
 
-    classes = json.loads(classes)
+
 
     class_map = {}
     functions_map = {}
@@ -175,8 +190,8 @@ for commit in content:
 
     added_functions = set(current_functions_array) - set(last_functions)
     removed_functions = set(last_functions) - set(current_functions_array)
-    print(added_functions, 'added functions')
-    print(removed_functions, 'removed functions')
+    # print(added_functions, 'added functions')
+    # print(removed_functions, 'removed functions')
     last_functions = current_functions_array
 
     for class_item in classes:
@@ -192,27 +207,32 @@ for commit in content:
                 bug_number += 1
     added_calls, removed_calls = subtract_two_maps(calls_map, last_calls_map)
 
-    try:
-        commit_date = open(path + 'date.txt').readlines()[0].strip()
-        commit_type = open(path + 'commit_type.txt').readlines()[0].strip()
-        if commit_type == "Bug":
-            for key, value in added_calls.items():
-                vertex_changes_map[key]['dates'].append(commit_date)
-                vertex_changes_map[key]['commits'].append(commit)
-
-            for key, value in removed_calls.items():
-                vertex_changes_map[key]['dates'].append(commit_date)
-                vertex_changes_map[key]['commits'].append(commit)
-
-    except:
-        continue
-
     last_calls_map = calls_map
-    print(bug_number, 'bug')
+    # print(bug_number, 'bug')
 
-    print(commit)
+    # print(commit)
     index += 1
 
+    try:
 
-with open('vertex_changes_map_dates_commits.txt', 'w') as vertex_changes_map_file:
+        commit_date = open(path + 'date.txt').readlines()[0].strip()
+        commit_type = open(path + 'commit_type.txt').readlines()[0].strip()
+        # if commit_type == "Bug":
+        for key, value in added_calls.items():
+            vertex_changes_map[key]['dates'].append(commit_date)
+            vertex_changes_map[key]['commits'].append(commit)
+
+        for key, value in removed_calls.items():
+            vertex_changes_map[key]['dates'].append(commit_date)
+            vertex_changes_map[key]['commits'].append(commit)
+
+    except:
+        print("Missing commit date or type: ", commit)
+        continue
+
+
+print(temp)
+
+# with open('hadoop_vertex_changes_map_dates_commits.txt', 'w') as vertex_changes_map_file:
+with open('spark_vertex_changes_map_dates_commits_all_types.txt', 'w') as vertex_changes_map_file:
     vertex_changes_map_file.write(str(vertex_changes_map))

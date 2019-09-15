@@ -7,14 +7,16 @@ repository = git.Repo(repo_directory_address)
 commits = repository.iter_commits()
 index = 0
 
+# with open(base_path + 'parents_list.txt') as commits_file:
 with open(base_path + 'commits_list_new.txt') as commits_file:
     content = commits_file.readlines()
 for commit in commits:
-    if commit.hexsha+"\n" not in list(content):
-        print('not in list')
-        continue
+    # print(commit)
+    # if commit.hexsha+"\n" not in list(content):
+    #     print('not in list')
+    #     continue
 
-    path = base_path + "himrod docs\spark\\" + commit.hexsha + "\\"
+    path = "D:\spark_commits\\" + commit.hexsha + "\\"
     commit_message = str(commit.message.strip())
     start_index = commit_message.find('[SPARK-')
     end_index = commit_message.find(']')

@@ -1,7 +1,8 @@
+# This script records
 import time
 from datetime import date
 import math
-import statistics
+import my_statistics
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
@@ -45,14 +46,20 @@ def reformat_dates(date_array):
     return array
 
 
-def write_map_to_excel(map_var, file_name):
+def write_map_to_excel(map_var, file_name, type):
     csv_file = open(file_name, 'w')
-    for key2, value2 in map_var.items():
-        csv_file.write(str(key2) + ', ' + str(value2) + '\n')
+    if type == "add_remove":
+        for key2, value2 in map_var.items():
+            csv_file.write(str(key2) + ',' + str(value2['add_remove_01']) + ',' + str(value2['add_remove_unique_01']) + ',' + str(value2['add_remove_total'])+ ',' + str(value2['add_remove_total_unique'])+ '\n')
+    elif type == "remove_add":
+        for key2, value2 in map_var.items():
+            csv_file.write(str(key2) + ',' + str(value2['remove_add_01']) + ',' + str(value2['remove_add_unique_01']) + ',' + str(value2['remove_add_total'])+ ',' + str(value2['remove_add_total_unique'])+ '\n')
     csv_file.close()
 
 
-with open('edge_life_cycle_map.txt') as edge_life_cycle_map_file:
+# with open('C:\\Users\\anaeimia\Documents\Thesis\himrod_docs\Analysis Results\\hadoop_edge_life_cycle_map.txt') as edge_life_cycle_map_file:
+with open(
+        'C:\\Users\\anaeimia\Documents\Thesis\Spark\Analysis Results\\spark_edge_life_cycle_map.txt') as edge_life_cycle_map_file:
     edge_life_cycle_map = eval(edge_life_cycle_map_file.read())
 
 removes_adds_array = []
@@ -72,11 +79,6 @@ vertex_changes_map_remove_add_callers_01 = {}
 vertex_changes_map_remove_add_callers_total = {}
 vertex_changes_map_remove_add_length_01 = {}
 vertex_changes_map_remove_add_length_total = {}
-
-vertex_changes_map_add_remove_sum_01 = {}
-vertex_changes_map_remove_add_sum_01 = {}
-vertex_changes_map_add_remove_sum_total = {}
-vertex_changes_map_remove_add_sum_total = {}
 
 remove_add_remove_array = []
 for key, value in edge_life_cycle_map.items():
@@ -108,9 +110,6 @@ for key, value in edge_life_cycle_map.items():
             except:
                 callers = []
             vertex_changes_map_add_remove_callers_01[key[1]] = callers
-
-
-
 
         try:
             vertex = vertex_changes_map_add_remove_total[key[1]]
@@ -153,9 +152,6 @@ for key, value in edge_life_cycle_map.items():
                 callers = []
             vertex_changes_map_remove_add_callers_01[key[1]] = callers
 
-
-
-
         try:
             vertex = vertex_changes_map_remove_add_total[key[1]]
         except:
@@ -170,6 +166,9 @@ for key, value in edge_life_cycle_map.items():
         callers.append(key[0])
         vertex_changes_map_remove_add_callers_total[key[1]] = callers
 
+main_map_add_remove = {}
+main_map_remove_add = {}
+
 for key, value in vertex_changes_map_add_remove_callers_01.items():
     vertex_changes_map_add_remove_callers_01[key] = list(set(value))
     vertex_changes_map_add_remove_length_01[key] = len(list(set(value)))
@@ -177,12 +176,6 @@ for key, value in vertex_changes_map_add_remove_callers_01.items():
 for key, value in vertex_changes_map_remove_add_callers_01.items():
     vertex_changes_map_remove_add_callers_01[key] = list(set(value))
     vertex_changes_map_remove_add_length_01[key] = len(list(set(value)))
-
-for key, value in vertex_changes_map_add_remove_01.items():
-    vertex_changes_map_add_remove_sum_01[key] = value + vertex_changes_map_add_remove_length_01[key]
-
-for key, value in vertex_changes_map_remove_add_01.items():
-    vertex_changes_map_remove_add_sum_01[key] = value + vertex_changes_map_remove_add_length_01[key]
 
 for key, value in vertex_changes_map_add_remove_callers_total.items():
     vertex_changes_map_add_remove_callers_total[key] = list(set(value))
@@ -192,48 +185,20 @@ for key, value in vertex_changes_map_remove_add_callers_total.items():
     vertex_changes_map_remove_add_callers_total[key] = list(set(value))
     vertex_changes_map_remove_add_length_total[key] = len(list(set(value)))
 
-for key, value in vertex_changes_map_add_remove_total.items():
-    vertex_changes_map_add_remove_sum_total[key] = value + vertex_changes_map_add_remove_length_total[key]
-
-for key, value in vertex_changes_map_remove_add_total.items():
-    vertex_changes_map_remove_add_sum_total[key] = value + vertex_changes_map_remove_add_length_total[key]
-
-# for key, value in vertex_changes_map_add_remove_length.items():
-#     adds_removes_array.append(value)
-#
-# for key, value in vertex_changes_map_remove_add_length.items():
-#     removes_adds_array.append(value)
-write_map_to_excel(vertex_changes_map_add_remove_sum_01, 'vertex_changes_map_add_remove_sum_01.csv')
-write_map_to_excel(vertex_changes_map_add_remove_01, 'vertex_changes_map_add_remove_01.csv')
-write_map_to_excel(vertex_changes_map_add_remove_length_01, 'vertex_changes_map_add_remove_length_01.csv')
-write_map_to_excel(vertex_changes_map_remove_add_sum_01, 'vertex_changes_map_remove_add_sum_01.csv')
-write_map_to_excel(vertex_changes_map_remove_add_01, 'vertex_changes_map_remove_add_01.csv')
-write_map_to_excel(vertex_changes_map_remove_add_length_01, 'vertex_changes_map_remove_add_length_01.csv')
+for key, value in vertex_changes_map_add_remove_01.items():
+    main_map_add_remove[key] = {"add_remove_01": value,
+                                "add_remove_unique_01": vertex_changes_map_add_remove_length_01[key],
+                                "add_remove_total": vertex_changes_map_add_remove_total[key],
+                                "add_remove_total_unique": vertex_changes_map_add_remove_length_total[key]}
+for key, value in vertex_changes_map_remove_add_01.items():
+    main_map_remove_add[key] = {"remove_add_01": value,
+                                "remove_add_unique_01": vertex_changes_map_remove_add_length_01[key],
+                                "remove_add_total": vertex_changes_map_remove_add_total[key],
+                                "remove_add_total_unique": vertex_changes_map_remove_add_length_total[key]}
 
 
-write_map_to_excel(vertex_changes_map_add_remove_sum_total, 'vertex_changes_map_add_remove_sum_total.csv')
-write_map_to_excel(vertex_changes_map_add_remove_total, 'vertex_changes_map_add_remove_total.csv')
-write_map_to_excel(vertex_changes_map_add_remove_length_total, 'vertex_changes_map_add_remove_length_total.csv')
-write_map_to_excel(vertex_changes_map_remove_add_sum_total, 'vertex_changes_map_remove_add_sum_total.csv')
-write_map_to_excel(vertex_changes_map_remove_add_total, 'vertex_changes_map_remove_add_total.csv')
-write_map_to_excel(vertex_changes_map_remove_add_length_total, 'vertex_changes_map_remove_add_length_total.csv')
+# write_map_to_excel(main_map_add_remove, 'hadoop_add_remove.csv', 'add_remove')
+write_map_to_excel(main_map_add_remove, 'spark_add_remove.csv', 'add_remove')
+# write_map_to_excel(main_map_remove_add, 'hadoop_remove_add.csv', 'remove_add')
+write_map_to_excel(main_map_remove_add, 'spark_remove_add.csv', 'remove_add')
 
-# print(vertex_changes_map_add_remove)
-# print(vertex_changes_map_add_remove_length)
-# print(vertex_changes_map_add_remove_sum)
-# print()
-# print(vertex_changes_map_remove_add)
-# print(vertex_changes_map_remove_add_length)
-# print(vertex_changes_map_remove_add_sum)
-
-# print(vertex_changes_map_add_remove_callers)
-# # print(vertex_changes_map_add_remove_length)
-# print()
-# print(vertex_changes_map_remove_add_callers)
-# # print(vertex_changes_map_remove_add_length)
-# print()
-
-# print(sorted(vertex_changes_map_add_remove_length,key = vertex_changes_map_add_remove_length.get))
-print(sorted(adds_removes_array))
-# print(sorted(vertex_changes_map_remove_add_length,key = vertex_changes_map_remove_add_length.get))
-print(sorted(removes_adds_array))

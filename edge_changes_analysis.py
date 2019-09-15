@@ -1,7 +1,7 @@
 import time
 from datetime import date
 import math
-import statistics
+import my_statistics
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -44,7 +44,7 @@ def reformat_dates(date_array):
     return array
 
 
-with open('edge_life_cycle_map.txt') as edge_life_cycle_map_file:
+with open('C:\\Users\\anaeimia\Documents\Thesis\Spark\Analysis Results\edge_life_cycle_map.txt') as edge_life_cycle_map_file:
     edge_life_cycle_map = eval(edge_life_cycle_map_file.read())
 
 removes_adds_array = []
@@ -75,11 +75,11 @@ for key, value in edge_life_cycle_map.items():
 print(len(add_remove_add_array), len(remove_add_remove_array))
 print("########################################")
 
-print('average adds-removes array:', statistics.mean(adds_removes_array))
-print('average removes-adds array:', statistics.mean(removes_adds_array))
+print('average adds-removes array:', my_statistics.mean(adds_removes_array))
+print('average removes-adds array:', my_statistics.mean(removes_adds_array))
 
-print('mode adds-removes array:', statistics.mode(adds_removes_array))
-print('mode removes-adds array:', statistics.mode(removes_adds_array))
+print('mode adds-removes array:', my_statistics.mode(adds_removes_array))
+print('mode removes-adds array:', my_statistics.mode(removes_adds_array))
 
 print("########################################")
 

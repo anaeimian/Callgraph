@@ -2,7 +2,7 @@
 import time
 import json
 from datetime import date
-import statistics
+import my_statistics
 
 
 def source_dst_date_diff(source_date_array, dst_date_array):
@@ -258,9 +258,9 @@ for commit in content:
 with open('vertex_bug_propagation_map_psd.txt', 'w') as vertex_bug_propagation_file:
     vertex_bug_propagation_file.write(str(vertex_bug_propagation_time_map))
 # print(propagation_time_index, propagation_time_total, propagation_time_total/propagation_time_index)
-print('median: ', statistics.median(propagation_time_array))
-print('mode: ', statistics.mode(propagation_time_array))
-print('mean: ', statistics.mean(propagation_time_array))
+print('median: ', my_statistics.median(propagation_time_array))
+print('mode: ', my_statistics.mode(propagation_time_array))
+print('mean: ', my_statistics.mean(propagation_time_array))
 print('max: ', max(propagation_time_array))
 print('min: ', min(propagation_time_array))
 print('length: ', len(propagation_time_array))
